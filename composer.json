@@ -1,0 +1,15 @@
+{
+    "name": "mateu/php_webstore_youtube",
+    "authors": [
+        {
+            "name": "Mateusdeli",
+            "email": "mateus_forlevesi@hotmail.com"
+        }
+    ],
+    "require": {},
+    "autoload": {
+        "psr-4": {
+            "App\\WebStore\\": "src/"
+        }
+    }
+}
