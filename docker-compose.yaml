@@ -18,4 +18,11 @@ services:
       MYSQL_DATABASE: webstore
       MYSQL_USER: mateus
       MYSQL_ROOT_PASSWORD: teste1
-    
+
+  phpmyadmin:
+    image: phpmyadmin
+    restart: always
+    ports:
+      - 80:80
+    environment:
+      - PMA_ARBITRARY=1
