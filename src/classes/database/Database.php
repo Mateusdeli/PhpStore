@@ -41,7 +41,116 @@ class Database
 
         }
         catch (PDOException $e) {
-            return false;
+            return $e->getMessage();
+        }
+
+        $this->closeConnection();
+        
+    }
+
+    public function insert(string $query, ?array $params = null)
+    {
+
+        if (!preg_match("/^INSERT/i", $query)) {
+            throw new Exception("A query sql fornecida não é do tipo INSERT");
+        }
+
+        $this->openConnection();
+
+        try {
+
+            $statement = $this->connection->prepare($query);
+
+            if (!empty($params)) {
+                $statement->execute($params);
+            }
+            $statement->execute();
+            return;
+        }
+        catch (PDOException $e) {
+            return $e->getMessage();
+        }
+
+        $this->closeConnection();
+        
+    }
+
+    public function update(string $query, ?array $params = null)
+    {
+
+        if (!preg_match("/^UPDATE/i", $query)) {
+            throw new Exception("A query sql fornecida não é do tipo UPDATE");
+        }
+
+        $this->openConnection();
+
+        try {
+
+            $statement = $this->connection->prepare($query);
+
+            if (!empty($params)) {
+                $statement->execute($params);
+            }
+            $statement->execute();
+            return;
+        }
+        catch (PDOException $e) {
+            return $e->getMessage();
+        }
+
+        $this->closeConnection();
+        
+    }
+
+    public function delete(string $query, ?array $params = null)
+    {
+
+        if (!preg_match("/^DELETE/i", $query)) {
+            throw new Exception("A query sql fornecida não é do tipo DELETE");
+        }
+
+        $this->openConnection();
+
+        try {
+
+            $statement = $this->connection->prepare($query);
+
+            if (!empty($params)) {
+                $statement->execute($params);
+            }
+            $statement->execute();
+            return;
+        }
+        catch (PDOException $e) {
+            return $e->getMessage();
+        }
+
+        $this->closeConnection();
+        
+    }
+
+    public function statement(string $query, ?array $params = null)
+    {
+
+        if (preg_match("/^(SELECT|INSERT|UPDATE|DELETE)/i", $query)) {
+            throw new Exception("A query passada é inválida!");
+        }
+
+        $this->openConnection();
+
+        try {
+
+            $statement = $this->connection->prepare($query);
+
+            if (!empty($params)) {
+                $statement->execute($params);
+            }
+            $statement->execute();
+            return;
+
+        }
+        catch (PDOException $e) {
+            return $e->getMessage();
         }
 
         $this->closeConnection();
