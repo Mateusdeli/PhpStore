@@ -6,6 +6,6 @@ class MainController
 {
     public function index()
     {
-        echo "huihuihdsa";   
+        
     }
 }
