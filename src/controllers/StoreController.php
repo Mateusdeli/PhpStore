@@ -2,10 +2,18 @@
 
 namespace App\WebStore\Controllers;
 
+use App\WebStore\Classes\Store;
+
 class StoreController
 {
-    public function cart()
+    public function index()
     {
-        echo "Carrinho Aqui";   
+        Store::Layout([
+            'layouts/html_header',
+            'layouts/header',
+            'store/index',
+            'layouts/footer',
+            'layouts/html_footer',
+        ]);
     }
 }

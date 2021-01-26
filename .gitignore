@@ -1,2 +1,4 @@
 /vendor
 /#MATERIAL
+/node_modules
+/resources

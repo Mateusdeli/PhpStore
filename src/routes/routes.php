@@ -1,9 +1,9 @@
 <?php
 
 $routes = [
-    'home' => 'main@index',
-    'store' => 'main@index',
-    'cart' => 'store@cart',
+    'home' => 'Home@index',
+    'store' => 'Store@index',
+    'cart' => 'Cart@index',
 ];
 
 $main_route = 'home';
