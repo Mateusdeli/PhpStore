@@ -10,8 +10,8 @@
           <?php if (Store::ClienteLogado()): ?>
             <a href="#">Sair</a>
           <?php else: ?>
-            <a href="?a=">Login</a>
-            <a href="#">Cadastrar</a>
+            <a href="?a=login">Login</a>
+            <a href="?a=create_account">Cadastrar</a>
           <?php endif; ?>
         <a href="#"><i class="fas fa-shopping-cart"></i>
           <span class="badge bg-warning">10</span>
