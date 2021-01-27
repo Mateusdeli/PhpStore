@@ -16,4 +16,9 @@ class AuthController
             'layouts/html_footer',
         ]);
     }
+
+    public function create()
+    {
+        
+    }
 }
