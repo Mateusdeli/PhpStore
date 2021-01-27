@@ -2,7 +2,7 @@
 
 namespace App\WebStore\Controllers\Services;
 
-class AuthService
+class AuthServices
 {
     public function createAccount()
     {
