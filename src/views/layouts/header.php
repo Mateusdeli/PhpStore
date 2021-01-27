@@ -14,7 +14,7 @@
             <a href="?a=create_account">Cadastrar</a>
           <?php endif; ?>
         <a href="#"><i class="fas fa-shopping-cart"></i>
-          <span class="badge bg-warning">10</span>
+          <!-- <span class="badge bg-warning">10</span> -->
         </a>
       </div>
   </div>
