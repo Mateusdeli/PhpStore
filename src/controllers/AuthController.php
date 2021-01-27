@@ -17,8 +17,25 @@ class AuthController
         ]);
     }
 
+    public function login()
+    {
+       
+    }
+
     public function create()
     {
-        
+        if (Store::ClienteLogado()) {
+            return $this->index();
+        }
+
+        die('Create');
+
+        Store::Layout([
+            'layouts/html_header',
+            'layouts/header',
+            'home',
+            'layouts/footer',
+            'layouts/html_footer',
+        ]);
     }
 }
