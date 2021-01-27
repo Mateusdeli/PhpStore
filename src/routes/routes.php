@@ -4,7 +4,8 @@ $routes = [
     'home' => 'Home@index',
     'store' => 'Store@index',
     'cart' => 'Cart@index',
-    'auth' => 'Auth@create',
+    'login' => 'Auth@login',
+    'create_account' => 'Auth@create'
 ];
 
 $main_route = 'home';
