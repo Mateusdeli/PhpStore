@@ -8,7 +8,8 @@
         <a href="?a=home">Home</a>
         <a href="?a=store">Loja</a>
           <?php if (Store::ClienteLogado()): ?>
-            <a href="#">Sair</a>
+            <a href="?a=logout">Logout</a>
+            <a href="?a=my_account">Minha Conta</a>
           <?php else: ?>
             <a href="?a=login">Login</a>
             <a href="?a=create_account">Cadastrar</a>
