@@ -3,18 +3,23 @@
 namespace App\WebStore\Controllers;
 
 use App\WebStore\Classes\Store;
-use GuzzleHttp\Psr7\Request;
-use GuzzleHttp\Psr7\Response;
-use Psr\Http\Message\ResponseInterface;
+use App\WebStore\Controllers\Services\AuthServices;
 
 class AuthController
 {
+
+    private AuthServices $authServices;
+
+    public function __construct() {
+        $this->authServices = new AuthServices();
+    }
+
     public function index()
     {
         Store::Layout([
             'layouts/html_header',
             'layouts/header',
-            'home',
+            'home/index',
             'layouts/footer',
             'layouts/html_footer',
         ]);
@@ -42,6 +47,13 @@ class AuthController
 
     public function store()
     {
-        echo $_GET['text_email'];
+
+        if (Store::ClienteLogado()) {
+          return $this->index();
+        }
+
+        if (Store::ChecarRequisicaoTipoPost()) {
+            return $this->index();
+        }
     }
 }

@@ -21,6 +21,6 @@ class Container implements ContainerProvider
 
     private function definitions(): array
     {
-        return [];
+        return [ ];
     }
 }
