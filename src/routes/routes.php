@@ -1,11 +1,15 @@
 <?php
 
+use GuzzleHttp\Psr7\Request;
+
 $routes = [
     'home' => 'Home@index',
     'store' => 'Store@index',
     'cart' => 'Cart@index',
-    'login' => 'Auth@login',
-    'create_account' => 'Auth@create'
+
+    'login_form' => 'Auth@login',
+    'create_account_form' => 'Auth@create',
+    'create_account' => 'Auth@store'
 ];
 
 $main_route = 'home';

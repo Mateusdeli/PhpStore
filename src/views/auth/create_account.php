@@ -3,7 +3,7 @@
       <div class="col-sm-6 offset-sm-3">
         <h3 class="text-center my-5">Registro de Novo Cliente</h3>
 
-        <form action="" method="post">
+        <form action="?a=create_account" method="post">
             <div class="my-3">
                 <label for="text_email">Email</label>
                 <input type="email" name="text_email" id="text_email" placeholder="Email" class="form-control" required>

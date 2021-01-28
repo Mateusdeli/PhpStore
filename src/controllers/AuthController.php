@@ -3,6 +3,9 @@
 namespace App\WebStore\Controllers;
 
 use App\WebStore\Classes\Store;
+use GuzzleHttp\Psr7\Request;
+use GuzzleHttp\Psr7\Response;
+use Psr\Http\Message\ResponseInterface;
 
 class AuthController
 {
@@ -35,5 +38,10 @@ class AuthController
             'layouts/footer',
             'layouts/html_footer',
         ]);
+    }
+
+    public function store()
+    {
+        echo $_GET['text_email'];
     }
 }
