@@ -28,12 +28,10 @@ class AuthController
             return $this->index();
         }
 
-        die('Create');
-
         Store::Layout([
             'layouts/html_header',
             'layouts/header',
-            'home',
+            'auth/create_account',
             'layouts/footer',
             'layouts/html_footer',
         ]);
