@@ -25,4 +25,9 @@ class Store
     {
         return isset($_SESSION['cliente']);
     }
+
+    public static function ChecarRequisicaoTipoPost(): bool
+    {
+        return $_SERVER['REQUEST_METHOD'] != "POST";
+    }
 }
