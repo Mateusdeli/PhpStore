@@ -30,12 +30,6 @@ class ClienteBuilder
         return $this;
     }
 
-    public function hasConfirmPassword(string $confirmPassword)
-    {
-        $this->cliente->setConfirmPassword($confirmPassword);
-        return $this;
-    }
-
     public function hasNomeCompleto(string $nomeCompleto)
     {
         $this->cliente->setNomeCompleto($nomeCompleto);
@@ -57,6 +51,12 @@ class ClienteBuilder
     public function hasTelefone(string $telefone)
     {
         $this->cliente->setTelefone($telefone);
+        return $this;
+    }
+
+    public function hasPurl(string $purl)
+    {
+        $this->cliente->setPurl($purl);
         return $this;
     }
 
