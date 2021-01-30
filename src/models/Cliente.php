@@ -6,11 +6,11 @@ class Cliente
 {
     private string $email;
     private string $password;
-    private string $confirmPassword;
     private string $nome_completo;
     private string $endereco;
     private string $cidade;
     private string $telefone;
+    private string $purl;
 
     public function getEmail(): string
     {
@@ -20,11 +20,6 @@ class Cliente
     public function getPassword(): string
     {
         return $this->password;
-    }
-
-    public function getConfirmPassword(): string
-    {
-        return $this->confirmPassword;
     }
 
     public function getNomeCompleto(): string
@@ -47,19 +42,20 @@ class Cliente
         return $this->telefone;
     }
 
+    public function getPurl(): string
+    {
+        return $this->purl;
+    }
+
     public function setEmail(string $email)
     {
         $this->email = $email;
     }
+    
 
     public function setPassword(string $password)
     {
         $this->password = $password;
-    }
-
-    public function setConfirmPassword(string $confirmPassword)
-    {
-        $this->confirmPassword = $confirmPassword;
     }
 
     public function setNomeCompleto(string $nome_completo)
@@ -80,6 +76,11 @@ class Cliente
     public function setTelefone(string $telefone)
     {
         $this->telefone = $telefone;
+    }
+
+    public function setPurl(string $purl)
+    {
+        $this->purl = $purl;
     }
 
 
