@@ -1,6 +1,6 @@
 <?php
 
-namespace App\WebStore\Controllers\Services;
+namespace App\WebStore\Services;
 
 use App\WebStore\Models\Builders\ClienteBuilder;
 
