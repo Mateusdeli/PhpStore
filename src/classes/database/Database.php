@@ -63,6 +63,7 @@ class Database
 
             if (!empty($params)) {
                 $statement->execute($params);
+                return;
             }
             $statement->execute();
             return;

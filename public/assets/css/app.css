@@ -10737,3 +10737,7 @@ textarea.form-control-lg {
 .h-footer {
   background-color: rgba(224, 224, 224, 0.867);
 }
+
+.list-errors {
+  list-style: none;
+}

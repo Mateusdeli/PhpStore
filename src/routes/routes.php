@@ -1,14 +1,6 @@
 <?php
 
 use App\WebStore\Config\Container as ConfigContainer;
-use App\WebStore\Config\Container\Container;
-use App\WebStore\Controllers\AuthController;
-use App\WebStore\Controllers\Services\AuthServices;
-use DI\Container as DIContainer;
-use DI\ContainerBuilder;
-use GuzzleHttp\Psr7\Request;
-
-use function PHPSTORM_META\type;
 
 $routes = [
     'home' => 'Home@index',

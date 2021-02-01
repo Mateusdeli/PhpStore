@@ -30,4 +30,10 @@ class Store
     {
         return $_SERVER['REQUEST_METHOD'] != "POST";
     }
+
+    public static function setSessionErrorMessage(string $errorName = "error", $message)
+    {
+        $_SESSION[$errorName] = $message;
+    }
+
 }

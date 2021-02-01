@@ -3,7 +3,11 @@
 namespace App\WebStore\Services;
 
 use App\WebStore\Classes\Database\Database;
+use App\WebStore\Classes\Store;
+use App\WebStore\Helpers\HashHelper;
 use App\WebStore\Models\Builders\ClienteBuilder;
+use App\WebStore\Models\Cliente;
+use App\WebStore\Utils\Libs\FormValidator\RakitFormValidator;
 use Exception;
 
 class AuthServices
@@ -12,6 +16,10 @@ class AuthServices
 
     public function __construct(Database $database) {
         $this->database = $database;
+    }
+
+    public function login(string $email, string $password) {
+        
     }
 
     public function createAccount(
@@ -24,35 +32,32 @@ class AuthServices
         string $telefone = null
         )
     {
-        $key_purl = $email + $nomeCompleto;
-        
+
+        $queryNovoCliente = "INSERT INTO `tb_clientes` (email, pass, fullname, endereco, cidade, telefone, purl) VALUES (:e, :pass, :f, :en, :c, :t, :purl)";
+        $messageSenhasNaoConferem = "A senha fornecida não correspondem!";
+        $messageEmailExistente = "Este email já está cadastrado!";
+
         if (!$this->verificarSenhaCorresponde($senha, $confirmarSenha)) {
-            throw new Exception("A senha fornecidade não correspondem");
+            throw new Exception($messageSenhasNaoConferem);
         }
 
-        $clienteBuilder = new ClienteBuilder();
-        $cliente = $clienteBuilder
-            ->hasEmail($email)
-            ->hasPassword($this->gerarHashSenha($senha))
-            ->hasNomeCompleto($nomeCompleto)
-            ->hasEndereco($endereco)
-            ->hasCidade($cidade)
-            ->hasTelefone($telefone)
-            ->hasPurl($this->gerarPurlCode($key_purl))
-            ->build();
+        if ($this->checarEmailJaExiste($email)) {
+            throw new Exception($messageEmailExistente);
+        }
 
-        $query = "INSERT INTO `tb_clientes` (email, pass, fullname, endereco, cidade, telefone, purl) VALUES (:e, :p, :f, :en, :c, :t, :p)";
+        $cliente = $this->criarCliente($email, $senha, $nomeCompleto, $endereco, $cidade, $telefone);
+
         $params = array(
             ":e" => $cliente->getEmail(),
-            ":p" => $cliente->getPassword(),
+            ":pass" => $cliente->getPassword(),
             ":f" => $cliente->getNomeCompleto(),
             ":en" => $cliente->getEndereco(),
             ":c" => $cliente->getCidade(),
             ":t" => $cliente->getTelefone(),
-            ":p" => $cliente->getPurl()
+            ":purl" => $cliente->getPurl()
         );
         
-        $this->database->insert($query, $params);
+        $this->database->insert($queryNovoCliente, $params);
 
     }
 
@@ -61,13 +66,39 @@ class AuthServices
         return $senha === $confirmarSenha;
     }
 
-    private function gerarPurlCode($key_purl): string
-    {
-        return md5($key_purl);
-    }
-
     private function gerarHashSenha(string $password): string
     {
-        return password_hash($password, PASSWORD_ARGON2I);
+        return password_hash($password, PASSWORD_ARGON2ID);
+    }
+
+    private function checarEmailJaExiste(string $email): bool 
+    {
+        $querySelecionarEmail = "SELECT email FROM `tb_clientes` WHERE `email` = :email";
+        $params = [
+            ":email" => strtolower(trim($email))
+        ];
+        $resultEmails = $this->database->select($querySelecionarEmail, $params);
+        return count($resultEmails) != 0;
+    }
+
+    private function criarCliente(string $email, string $senha, string $nomeCompleto, string $endereco, string $cidade, string $telefone): Cliente
+    {
+        $purlHash = HashHelper::gerarHashAleatorio(40);
+        
+        $clienteBuilder = new ClienteBuilder();
+        return $clienteBuilder
+            ->hasEmail(strtolower(trim($email)))
+            ->hasPassword($this->gerarHashSenha($senha))
+            ->hasNomeCompleto(trim($nomeCompleto))
+            ->hasEndereco(trim($endereco))
+            ->hasCidade(trim($cidade))
+            ->hasTelefone(trim($telefone))
+            ->hasPurl($purlHash)
+            ->build();
+    }
+
+    private function gerarLinkConfirmacaoEmail(string $purlHash)
+    {
+        $link_purl = "http://localhost:8000/?a=confirmar_email&token={$purlHash}";
     }
 }
