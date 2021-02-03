@@ -6,12 +6,12 @@ use App\WebStore\Classes\Events\CreateAccountEvent;
 use App\WebStore\Classes\Events\Observers\CreateAccount\CreateAccountSaveDbObserver;
 use App\WebStore\Classes\Events\Observers\CreateAccount\CreateAccountSendEmailObserver;
 use App\WebStore\Classes\Store;
-use App\WebStore\Exceptions\ErrorArrayException;
 use App\WebStore\Exceptions\MessagesErrorException;
 use App\WebStore\Models\Cliente;
 use App\WebStore\Services\AuthServices;
+use App\WebStore\Utils\Libs\Email\PhpMailerAdapter;
 use App\WebStore\Utils\Libs\FormValidator\FormValidator;
-use Exception;
+use PHPMailer\PHPMailer\PHPMailer;
 use Throwable;
 
 class AuthController
@@ -46,11 +46,6 @@ class AuthController
         $cliente = new Cliente();
         $cliente->setNomeCompleto("Mateus Deliberali");
 
-        (new CreateAccountEvent())
-        ->Attach(new CreateAccountSaveDbObserver($cliente))
-        ->Attach(new CreateAccountSendEmailObserver("dsadas", "dsadasd"))
-        ->Notify();
-
         if (Store::ClienteLogado()) {
             return $this->index();
         }
@@ -78,6 +73,10 @@ class AuthController
     
             $this->formValidator->validateEmail($_POST['text_email'], true);
             $this->formValidator->validatePassword($_POST['text_senha_1'], true);
+            
+            if (count($this->formValidator->getErrorsMessage()) > 0) {
+                throw new MessagesErrorException($this->formValidator->getErrorsMessage());
+            }
 
             $this->authServices->createAccount(
                 $_POST['text_email'], 
@@ -87,10 +86,6 @@ class AuthController
                 $_POST['text_endereco'],
                 $_POST['text_cidade'],
                 $_POST['text_telefone']);
-            
-            if (count($this->formValidator->getErrorsMessage()) > 0) {
-                throw new MessagesErrorException($this->formValidator->getErrorsMessage());
-            }
 
             $datasViewCreateAccount = [
                 'conta_criada' => 'Conta cadastrada com sucesso!'
@@ -125,5 +120,10 @@ class AuthController
                 'layouts/html_footer',
             ]);
         }
+    }
+
+    public function confirmar_email()
+    {
+        echo $_GET['token'];
     }
 }
