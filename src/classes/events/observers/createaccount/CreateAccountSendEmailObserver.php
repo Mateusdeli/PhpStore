@@ -3,19 +3,19 @@
 namespace App\WebStore\Classes\Events\Observers\CreateAccount;
 
 use App\WebStore\Classes\Events\Observers\ObserverInterface;
+use App\WebStore\Utils\Libs\Email\EmailSenderInterface;
 
 class CreateAccountSendEmailObserver implements ObserverInterface
 {
-    private $subject;
-    private $email_to;
 
-    public function __construct($subject, $email_to) {
-        $this->subject = $subject;
-        $this->email_to = $email_to;
+    private EmailSenderInterface $emailSenderInterface;
+
+    public function __construct(EmailSenderInterface $emailSenderInterface) {
+        $this->emailSenderInterface = $emailSenderInterface;
     }
 
     public function update(): void
     {
-        var_dump("Email enviado!");
+        $this->emailSenderInterface->send();
     }
 }
