@@ -9,7 +9,8 @@ $routes = [
 
     'login_form' => 'Auth@login',
     'create_account_form' => 'Auth@create',
-    'create_account' => 'Auth@store'
+    'create_account' => 'Auth@store',
+    'confirmar_email' => 'Auth@confirmar_email'
 ];
 
 $main_route = 'home';

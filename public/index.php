@@ -1,16 +1,15 @@
 <?php
 
 // abrir a sessao
-
-use App\WebStore\Config\Container\Container;
-use App\WebStore\Controllers\AuthController;
-use App\WebStore\Controllers\Services\AuthServices;
-use DI\ContainerBuilder;
+use Dotenv\Dotenv;
 
 session_start();
 
 //autoload
 require_once(__DIR__ . '/../vendor/autoload.php');
+
+$dotenv = Dotenv::createImmutable(__DIR__ . "/../");
+$dotenv->load();
 
 //routes
 require_once(__DIR__ . '/../src/routes/routes.php');
