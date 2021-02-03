@@ -3,19 +3,24 @@
 namespace App\WebStore\Services;
 
 use App\WebStore\Classes\Database\Database;
-use App\WebStore\Classes\Store;
+use App\WebStore\Classes\Events\CreateAccountEvent;
+use App\WebStore\Classes\Events\Observers\CreateAccount\CreateAccountSaveDbObserver;
+use App\WebStore\Classes\Events\Observers\CreateAccount\CreateAccountSendEmailObserver;
 use App\WebStore\Helpers\HashHelper;
 use App\WebStore\Models\Builders\ClienteBuilder;
 use App\WebStore\Models\Cliente;
-use App\WebStore\Utils\Libs\FormValidator\RakitFormValidator;
+use App\WebStore\Utils\Libs\Email\EmailSenderInterface;
 use Exception;
+use Throwable;
 
 class AuthServices
 {
     private Database $database;
+    private EmailSenderInterface $mail;
 
-    public function __construct(Database $database) {
+    public function __construct(Database $database, EmailSenderInterface $mail) {
         $this->database = $database;
+        $this->mail = $mail;
     }
 
     public function login(string $email, string $password) {
@@ -32,8 +37,6 @@ class AuthServices
         string $telefone = null
         )
     {
-
-        $queryNovoCliente = "INSERT INTO `tb_clientes` (email, pass, fullname, endereco, cidade, telefone, purl) VALUES (:e, :pass, :f, :en, :c, :t, :purl)";
         $messageSenhasNaoConferem = "A senha fornecida não correspondem!";
         $messageEmailExistente = "Este email já está cadastrado!";
 
@@ -47,18 +50,11 @@ class AuthServices
 
         $cliente = $this->criarCliente($email, $senha, $nomeCompleto, $endereco, $cidade, $telefone);
 
-        $params = array(
-            ":e" => $cliente->getEmail(),
-            ":pass" => $cliente->getPassword(),
-            ":f" => $cliente->getNomeCompleto(),
-            ":en" => $cliente->getEndereco(),
-            ":c" => $cliente->getCidade(),
-            ":t" => $cliente->getTelefone(),
-            ":purl" => $cliente->getPurl()
-        );
-        
-        $this->database->insert($queryNovoCliente, $params);
-
+        // evento que salva no banco e mandar email de confirmacao
+        (new CreateAccountEvent())
+        ->Attach(new CreateAccountSaveDbObserver($cliente, $this->database))
+        ->Attach(new CreateAccountSendEmailObserver($this->enviarEmailLinkConfirmacao([$cliente->getEmail()], $cliente->getPurl())))
+        ->Notify();
     }
 
     private function verificarSenhaCorresponde(string $senha, string $confirmarSenha): bool
@@ -99,6 +95,23 @@ class AuthServices
 
     private function gerarLinkConfirmacaoEmail(string $purlHash)
     {
-        $link_purl = "http://localhost:8000/?a=confirmar_email&token={$purlHash}";
+        $link = "http://localhost:8000/?a=confirmar_email&token=";
+        return "{$link}{$purlHash}";
+    }
+
+    private function enviarEmailLinkConfirmacao(array $emails, string $pushHash): EmailSenderInterface
+    {
+        
+        $from = $_ENV['FROM'];
+        $host = $_ENV['HOST'];
+        $port = $_ENV['PORT'];
+        $username = $_ENV['USERNAME'];
+        $pass = $_ENV['PASSWORD'];
+
+        $this->mail->configuration($from, $host, $port, $username, $pass, true);
+        $this->mail->addBody('Confirme sua conta clicando neste link: ' . "<a href={$this->gerarLinkConfirmacaoEmail($pushHash)}>{$this->gerarLinkConfirmacaoEmail($pushHash)}<a/>")
+        ->addSubject('Assunto Teste')
+        ->addEmailAddress($emails);
+        return $this->mail;
     }
 }
