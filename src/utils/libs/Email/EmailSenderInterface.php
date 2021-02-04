@@ -11,5 +11,5 @@ interface EmailSenderInterface
     public function addBCC(string $bcc): self;
     public function addBody(string $body): self;
     public function addAttachments(array $attachments): self;
-    public function send(?string $fromName = null): bool;
+    public function send(string $fromName = ''): bool;
 }

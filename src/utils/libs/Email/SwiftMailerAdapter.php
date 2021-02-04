@@ -73,7 +73,7 @@ class SwiftMailerAdapter implements EmailSenderInterface
         return $this;
     }
 
-    public function send(?string $fromName = null): bool
+    public function send(string $fromName = ''): bool
     {
         try {
             $transport = (new Swift_SmtpTransport($this->host, $this->port))
@@ -83,8 +83,14 @@ class SwiftMailerAdapter implements EmailSenderInterface
             $mailer = new Swift_Mailer($transport);
 
             $message = (new Swift_Message($this->subject, $this->body))
-                ->setFrom([$this->from => $fromName])
                 ->setTo($this->emailAddress);
+
+            if (empty($fromName) || $fromName === '') {
+                $message->setFrom([$this->from], $_ENV['APP_NAME']);
+            }
+            else {
+                $message->setFrom([$this->from], $fromName);
+            }
 
             if ($this->html) {
                 $message->setContentType('text/html');
