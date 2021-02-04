@@ -57,6 +57,17 @@ class AuthServices
         ->Notify();
     }
 
+    public function confirmarLinkEmail(string $token): void
+    {
+        $query = "UPDATE `tb_clientes` SET ativo = :ativo, purl = null WHERE purl = :purl";
+        $params = array(
+            ":ativo" => Cliente::STATUS_ATIVO,
+            ":purl" => $token
+        );
+
+        $this->database->update($query, $params);
+    }
+
     private function verificarSenhaCorresponde(string $senha, string $confirmarSenha): bool
     {
         return $senha === $confirmarSenha;

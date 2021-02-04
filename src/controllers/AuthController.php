@@ -7,6 +7,10 @@ use App\WebStore\Classes\Events\Observers\CreateAccount\CreateAccountSaveDbObser
 use App\WebStore\Classes\Events\Observers\CreateAccount\CreateAccountSendEmailObserver;
 use App\WebStore\Classes\Store;
 use App\WebStore\Exceptions\MessagesErrorException;
+use App\WebStore\Helpers\AuthHelper;
+use App\WebStore\Helpers\HttpHelper;
+use App\WebStore\Helpers\LayoutHelper;
+use App\WebStore\Helpers\SessionHelper;
 use App\WebStore\Models\Cliente;
 use App\WebStore\Services\AuthServices;
 use App\WebStore\Utils\Libs\Email\PhpMailerAdapter;
@@ -26,7 +30,7 @@ class AuthController
 
     public function index()
     {
-        Store::Layout([
+        LayoutHelper::Layout([
             'layouts/html_header',
             'layouts/header',
             'home/index',
@@ -37,7 +41,7 @@ class AuthController
 
     public function login()
     {
-       
+       echo "LOGIN";
     }
 
     public function create()
@@ -46,11 +50,11 @@ class AuthController
         $cliente = new Cliente();
         $cliente->setNomeCompleto("Mateus Deliberali");
 
-        if (Store::ClienteLogado()) {
+        if (AuthHelper::ClienteLogado()) {
             return $this->index();
         }
 
-        Store::Layout([
+        LayoutHelper::Layout([
             'layouts/html_header',
             'layouts/header',
             'auth/create_account',
@@ -63,11 +67,11 @@ class AuthController
     {
 
         try {
-            if (Store::ClienteLogado()) {
+            if (AuthHelper::ClienteLogado()) {
                 return $this->index();
             }
 
-            if (Store::ChecarRequisicaoTipoPost()) {
+            if (HttpHelper::ChecarRequisicaoTipoPost()) {
                 return $this->index();
             }
     
@@ -91,7 +95,7 @@ class AuthController
                 'conta_criada' => 'Conta cadastrada com sucesso!'
             ];
 
-            Store::Layout([
+            LayoutHelper::Layout([
                 'layouts/html_header',
                 'layouts/header',
                 'auth/create_account',
@@ -101,8 +105,8 @@ class AuthController
 
         } 
         catch(MessagesErrorException $ex) {
-            Store::setSessionErrorMessage("error", $ex->getAllErrorsMessage());
-            Store::Layout([
+            SessionHelper::setSessionErrorMessage("error", $ex->getAllErrorsMessage());
+            LayoutHelper::Layout([
                 'layouts/html_header',
                 'layouts/header',
                 'auth/create_account',
@@ -111,8 +115,8 @@ class AuthController
             ]);
         }
         catch(Throwable $ex) {
-            Store::setSessionErrorMessage("error", $ex->getMessage());
-            Store::Layout([
+            SessionHelper::setSessionErrorMessage("error", $ex->getMessage());
+            LayoutHelper::Layout([
                 'layouts/html_header',
                 'layouts/header',
                 'auth/create_account',
@@ -124,6 +128,20 @@ class AuthController
 
     public function confirmar_email()
     {
-        echo $_GET['token'];
+        $token = $_GET['token'];
+
+        if (!isset($token) || empty($token)) {
+            SessionHelper::setSessionErrorMessage("error", "Este token não existe");
+            LayoutHelper::Layout([
+                'layouts/html_header',
+                'layouts/header',
+                'auth/create_account',
+                'layouts/footer',
+                'layouts/html_footer',
+            ]);
+        }
+
+        $this->authServices->confirmarLinkEmail($token);
+        $this->login();
     }
 }
