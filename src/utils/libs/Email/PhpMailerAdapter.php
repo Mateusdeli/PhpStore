@@ -76,7 +76,7 @@ class PhpMailerAdapter implements EmailSenderInterface
         return $this;
     }
 
-    public function send(string $fromName = ''): bool
+    public function send(?string $fromName = null): bool
     {
         try {
 
@@ -92,7 +92,7 @@ class PhpMailerAdapter implements EmailSenderInterface
             $this->phpMailer->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;         // Enable TLS encryption; `PHPMailer::ENCRYPTION_SMTPS` encouraged
             $this->phpMailer->Port       = $this->port;
 
-            if (empty($fromName || $fromName === '')) {
+            if (empty($fromName) || is_null($fromName)) {
                 $this->phpMailer->setFrom($this->from, $_ENV['APP_NAME']);
             }
             else {
