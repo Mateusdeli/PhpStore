@@ -26,6 +26,12 @@
             </div>
         <?php endif; ?>
 
+        <?php if (isset($msg_email_confirmado) || !empty($msg_email_confirmado)): ?>
+            <div class="alert alert-success text-center p-2">
+                <span><?= $msg_email_confirmado ?></span>
+            </div>
+        <?php endif; ?>
+
         <form action="?a=create_account" method="post">
             <div class="my-3">
                 <label for="text_email">Email</label>

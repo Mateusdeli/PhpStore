@@ -1,13 +1,15 @@
-<?php use App\WebStore\Classes\Store;?>
+<?php
+use App\WebStore\Helpers\AuthHelper;
+?>
 <div class="container-fluid h-nav">
   <div class="row align-items-center pt-3 pb-3">
       <div class="col-6 d-flex align-items-center">
-        <a href="/"><h3><?= APP_NAME ?></h3></a>
+        <a href="/"><h3><?= $_ENV['APP_NAME'] ?></h3></a>
       </div>
       <div class="col-6 text-end">
         <a href="?a=home">Home</a>
         <a href="?a=store">Loja</a>
-          <?php if (Store::ClienteLogado()): ?>
+          <?php if (AuthHelper::ClienteLogado()): ?>
             <a href="?a=logout">Logout</a>
             <a href="?a=my_account">Minha Conta</a>
           <?php else: ?>
