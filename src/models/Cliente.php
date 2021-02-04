@@ -4,6 +4,8 @@ namespace App\WebStore\Models;
 
 class Cliente
 {
+    // trocar o status na coluna tb_cliente de 0 para 1
+    public const STATUS_ATIVO = 1; 
     private string $email;
     private string $password;
     private string $nome_completo;
