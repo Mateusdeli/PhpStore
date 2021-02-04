@@ -6,17 +6,18 @@ use PDO;
 
 class DatabaseFactory
 {
-    private static string $host = MYSQL_HOST;
-    private static string $database = MYSQL_DATABASE;
-    private static string $user = MYSQL_USER;
-    private static string $password = MYSQL_PASSWORD;
-    private static string $charset = MYSQL_CHARSET;
 
     public static function createConnection(DatabaseConnection $databaseConnection): PDO
     {
+        $host = $_ENV['DB_HOST'];
+        $database = $_ENV['DB_DATABASE'];
+        $charset = $_ENV['DB_CHARSET'];
+        $user = $_ENV['DB_USER'];
+        $password = $_ENV['DB_PASSWORD'];
+
         switch ($databaseConnection) {
             case $databaseConnection instanceof MysqlConnection:
-                return (new MysqlConnection)->connection(self::$host, self::$database, self::$user, self::$password, self::$charset);
+                return (new MysqlConnection)->connection($host, $database, $user, $password, $charset);
         }
     }
 
