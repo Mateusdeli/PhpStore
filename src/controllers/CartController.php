@@ -2,13 +2,13 @@
 
 namespace App\WebStore\Controllers;
 
-use App\WebStore\Classes\Store;
+use App\WebStore\Helpers\LayoutHelper;
 
 class CartController
 {
     public function index()
     {
-        Store::Layout([
+        LayoutHelper::Layout([
             'layouts/html_header',
             'layouts/header',
             'home',

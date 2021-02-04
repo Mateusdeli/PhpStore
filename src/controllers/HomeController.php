@@ -2,14 +2,14 @@
 
 namespace App\WebStore\Controllers;
 
-use App\WebStore\Classes\Store;
+use App\WebStore\Helpers\LayoutHelper;
 
 class HomeController
 {
 
     public function index()
     {
-        Store::Layout([
+        LayoutHelper::Layout([
             'layouts/html_header',
             'layouts/header',
             'home/index',
