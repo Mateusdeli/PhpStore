@@ -106,7 +106,7 @@ class AuthServices
 
     private function gerarLinkConfirmacaoEmail(string $purlHash)
     {
-        $link = "http://localhost:8000/?a=confirmar_email&token=";
+        $link = "{$_ENV['APP_HOST']}?a=confirmar_email&token=";
         return "{$link}{$purlHash}";
     }
 
@@ -119,9 +119,17 @@ class AuthServices
         $username = $_ENV['USERNAME'];
         $pass = $_ENV['PASSWORD'];
 
+        $template_email = "
+            <p>Seja bem-vindo a nossa loja {$_ENV['APP_NAME']}</p> 
+            <p>Por favor confirme o seu email para ter acesso a nossa loja </p>
+            <p>Para confirmar o email, click no link abaixo:</p>
+            <p><a href={$this->gerarLinkConfirmacaoEmail($pushHash)}>{$this->gerarLinkConfirmacaoEmail($pushHash)}<a/></p>
+        ";
+
         $this->mail->configuration($from, $host, $port, $username, $pass, true);
-        $this->mail->addBody('Confirme sua conta clicando neste link: ' . "<a href={$this->gerarLinkConfirmacaoEmail($pushHash)}>{$this->gerarLinkConfirmacaoEmail($pushHash)}<a/>")
-        ->addSubject('Assunto Teste')
+        $this->mail
+        ->addSubject($_ENV['APP_NAME'] . " - Confirmação de Email")
+        ->addBody($template_email)
         ->addEmailAddress($emails);
         return $this->mail;
     }
