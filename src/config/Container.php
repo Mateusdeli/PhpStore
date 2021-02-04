@@ -40,7 +40,7 @@ class Container
 
             EmailSenderInterface::class => 
                 create(PhpMailerAdapter::class)
-                    ->constructor(new PHPMailer())
+                    ->constructor(new PHPMailer(true))
        ];
     }
 
