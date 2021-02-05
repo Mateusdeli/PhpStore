@@ -129,19 +129,26 @@ class AuthController
     public function confirmar_email()
     {
         $token = $_GET['token'];
+        $tokenLength = 40;
+        $mensagemErro =  "Este token não existe";
 
-        if (!isset($token) || empty($token)) {
-            SessionHelper::setSessionErrorMessage("error", "Este token não existe");
-            LayoutHelper::Layout([
-                'layouts/html_header',
-                'layouts/header',
-                'auth/create_account',
-                'layouts/footer',
-                'layouts/html_footer',
-            ]);
+        if (AuthHelper::ClienteLogado()) {
+            return $this->index();
         }
 
-        $this->authServices->confirmarLinkEmail($token);
-        $this->login();
+        if (!isset($token) || empty($token)) {
+            SessionHelper::setSessionErrorMessage("error", $mensagemErro);
+            return $this->index();
+        }
+
+        if (strlen($token) !== $tokenLength) {
+            return $this->index();
+        }
+
+        if ($this->authServices->confirmarLinkEmail($token)) {
+            return $this->login();
+        }
+
+        return $this->index();
     }
 }
