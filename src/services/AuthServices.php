@@ -57,7 +57,7 @@ class AuthServices
         ->Notify();
     }
 
-    public function confirmarLinkEmail(string $token): void
+    public function confirmarLinkEmail(string $token): bool
     {
         $query = "UPDATE `tb_clientes` SET ativo = :ativo, purl = null WHERE purl = :purl";
         $params = array(
@@ -65,7 +65,11 @@ class AuthServices
             ":purl" => $token
         );
 
-        $this->database->update($query, $params);
+        if (empty($this->database->update($query, $params))) {
+            return true;
+        }
+
+        return false;
     }
 
     private function verificarSenhaCorresponde(string $senha, string $confirmarSenha): bool
@@ -90,7 +94,7 @@ class AuthServices
 
     private function criarCliente(string $email, string $senha, string $nomeCompleto, string $endereco, string $cidade, string $telefone): Cliente
     {
-        $purlHash = HashHelper::gerarHashAleatorio(40);
+        $purlHash = HashHelper::gerarHashAleatorio();
         
         $clienteBuilder = new ClienteBuilder();
         return $clienteBuilder
