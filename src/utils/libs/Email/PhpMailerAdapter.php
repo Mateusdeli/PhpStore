@@ -22,6 +22,7 @@ class PhpMailerAdapter implements EmailSenderInterface
     private string $cc;
     private string $bcc;
     private string $body;
+    private string $CharSet;
     private array $attachments = [];
 
     public function __construct(PHPMailer $phpMailer) {
@@ -84,7 +85,8 @@ class PhpMailerAdapter implements EmailSenderInterface
                 $this->phpMailer->SMTPDebug = SMTP::DEBUG_SERVER;
             }
                               // Enable verbose debug output
-            $this->phpMailer->isSMTP();                                            // Send using SMTP
+            $this->phpMailer->isSMTP();                                      // Send using SMTP
+            $this->phpMailer->CharSet = $this->CharSet;
             $this->phpMailer->Host       = $this->host;                    // Set the SMTP server to send through
             $this->phpMailer->SMTPAuth   = true;                                   // Enable SMTP authentication
             $this->phpMailer->Username   = $this->username;;                     // SMTP username
