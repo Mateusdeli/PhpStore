@@ -131,6 +131,7 @@ class AuthController
         $token = $_GET['token'];
         $tokenLength = 40;
         $mensagemErro =  "Este token não existe";
+        $mensagem_success = "Conta validada com sucesso";
 
         if (AuthHelper::ClienteLogado()) {
             return $this->index();
@@ -144,9 +145,16 @@ class AuthController
         if (strlen($token) !== $tokenLength) {
             return $this->index();
         }
-
+        
         if ($this->authServices->confirmarLinkEmail($token)) {
-            return $this->login();
+            LayoutHelper::Layout([
+                'layouts/html_header',
+                'layouts/header',
+                'auth/email_verificado',
+                'layouts/footer',
+                'layouts/html_footer',
+            ], ["mensagem_success" => $mensagem_success]);
+            return;
         }
 
         return $this->index();
