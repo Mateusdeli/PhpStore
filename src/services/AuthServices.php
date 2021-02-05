@@ -59,17 +59,27 @@ class AuthServices
 
     public function confirmarLinkEmail(string $token): bool
     {
-        $query = "UPDATE `tb_clientes` SET ativo = :ativo, purl = null WHERE purl = :purl";
-        $params = array(
-            ":ativo" => Cliente::STATUS_ATIVO,
+        $querySelecionaCliente = "SELECT * FROM `tb_clientes` WHERE purl = :purl";
+        $paramsSelecionarCliente = array(
             ":purl" => $token
         );
 
-        if (empty($this->database->update($query, $params))) {
-            return true;
+        $resultadoBuscaCliente = $this->database->select($querySelecionaCliente, $paramsSelecionarCliente);
+
+        if (count($resultadoBuscaCliente) <= 0) {
+            return false;
         }
 
-        return false;
+        $clienteID = $resultadoBuscaCliente[0]->id;
+
+        $queryUpdateAtivoPurl = "UPDATE `tb_clientes` SET ativo = :ativo, purl = null, updated_at = NOW() WHERE id = :id";
+        $paramsUpdateAtivoPurl = array(
+            ":ativo" => Cliente::STATUS_ATIVO,
+            ":id" => $clienteID
+        );
+
+        $this->database->update($queryUpdateAtivoPurl, $paramsUpdateAtivoPurl);
+        return true;
     }
 
     private function verificarSenhaCorresponde(string $senha, string $confirmarSenha): bool
@@ -116,7 +126,6 @@ class AuthServices
 
     private function enviarEmailLinkConfirmacao(array $emails, string $pushHash): EmailSenderInterface
     {
-        
         $from = $_ENV['FROM'];
         $host = $_ENV['HOST'];
         $port = $_ENV['PORT'];
