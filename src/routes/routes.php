@@ -7,7 +7,8 @@ $routes = [
     'store' => 'Store@index',
     'cart' => 'Cart@index',
 
-    'login_form' => 'Auth@login',
+    'login_form' => 'Auth@login_form',
+    'login' => 'Auth@login',
     'create_account_form' => 'Auth@create',
     'create_account' => 'Auth@store',
     'confirmar_email' => 'Auth@confirmar_email'
