@@ -10,6 +10,7 @@ use App\WebStore\Exceptions\MessagesErrorException;
 use App\WebStore\Helpers\AuthHelper;
 use App\WebStore\Helpers\HttpHelper;
 use App\WebStore\Helpers\LayoutHelper;
+use App\WebStore\Helpers\RedirectHelper;
 use App\WebStore\Helpers\SessionHelper;
 use App\WebStore\Models\Cliente;
 use App\WebStore\Services\AuthServices;
@@ -34,6 +35,17 @@ class AuthController
             'layouts/html_header',
             'layouts/header',
             'home/index',
+            'layouts/footer',
+            'layouts/html_footer',
+        ]);
+    }
+
+    public function login_form()
+    {
+        LayoutHelper::Layout([
+            'layouts/html_header',
+            'layouts/header',
+            'auth/login_form',
             'layouts/footer',
             'layouts/html_footer',
         ]);
@@ -91,17 +103,13 @@ class AuthController
                 $_POST['text_cidade'],
                 $_POST['text_telefone']);
 
-            $datasViewCreateAccount = [
-                'conta_criada' => 'Conta cadastrada com sucesso!'
-            ];
-
             LayoutHelper::Layout([
                 'layouts/html_header',
                 'layouts/header',
-                'auth/create_account',
+                'auth/create_account_success',
                 'layouts/footer',
                 'layouts/html_footer',
-            ], $datasViewCreateAccount);
+            ]);
 
         } 
         catch(MessagesErrorException $ex) {
@@ -131,7 +139,6 @@ class AuthController
         $token = $_GET['token'];
         $tokenLength = 40;
         $mensagemErro =  "Este token não existe";
-        $mensagem_success = "Conta validada com sucesso";
 
         if (AuthHelper::ClienteLogado()) {
             return $this->index();
@@ -153,10 +160,10 @@ class AuthController
                 'auth/email_verificado',
                 'layouts/footer',
                 'layouts/html_footer',
-            ], ["mensagem_success" => $mensagem_success]);
+            ]);
             return;
         }
 
-        return $this->index();
+        return RedirectHelper::RedirectRoot();
     }
 }

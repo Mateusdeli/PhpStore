@@ -65,7 +65,6 @@ class AuthServices
         );
 
         $resultadoBuscaCliente = $this->database->select($querySelecionaCliente, $paramsSelecionarCliente);
-
         if (count($resultadoBuscaCliente) <= 0) {
             return false;
         }
